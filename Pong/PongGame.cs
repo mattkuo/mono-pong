@@ -32,7 +32,7 @@ namespace Pong
 		/// </summary>
 		protected override void Initialize ()
 		{
-			int playerCenter = graphics.GraphicsDevice.Viewport.Height / 2 - Player.Length / 2;
+			int playerCenter = GraphicsDevice.Viewport.Height / 2 - Player.Length / 2;
 			player = new Player (0, playerCenter);
             
 			base.Initialize ();
@@ -68,13 +68,11 @@ namespace Pong
 			KeyboardState state = Keyboard.GetState ();
 
 			if (state.IsKeyDown(Keys.Escape))
-			{
 				Exit ();
-			}
 
-			if (state.IsKeyDown (Keys.Down))
+			if (state.IsKeyDown (Keys.Down) && GraphicsDevice.Viewport.Height > player.Y + Player.Length)
 				player.Y += Player.MoveSpeed;
-			if (state.IsKeyDown (Keys.Up))
+			if (state.IsKeyDown (Keys.Up) && player.Y > 0)
 				player.Y -= Player.MoveSpeed;
 			
             
