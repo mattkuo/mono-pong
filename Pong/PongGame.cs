@@ -67,12 +67,9 @@ namespace Pong
             
 			KeyboardState state = Keyboard.GetState ();
 
-			if (state.IsKeyDown(Keys.Escape))
-				Exit ();
-
-			if (state.IsKeyDown (Keys.Down) && GraphicsDevice.Viewport.Height > player.Y + Player.Length)
+			if (state.IsKeyDown (Keys.S) && GraphicsDevice.Viewport.Height > player.Y + Player.Length)
 				player.Y += Player.MoveSpeed;
-			if (state.IsKeyDown (Keys.Up) && player.Y > 0)
+			if (state.IsKeyDown (Keys.W) && player.Y > 0)
 				player.Y -= Player.MoveSpeed;
 			
             
@@ -85,14 +82,15 @@ namespace Pong
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw (GameTime gameTime)
 		{
-			graphics.GraphicsDevice.Clear (Color.Black);
+			graphics.GraphicsDevice.Clear (Color.SlateGray);
             
 			spriteBatch.Begin ();
-			spriteBatch.Draw (whiteRectangle, new Rectangle (player.X, player.Y, Player.Width, Player.Length), Color.White);
+
+			spriteBatch.Draw (whiteRectangle, player.Paddle, Color.White);
+
 			spriteBatch.End ();
             
 			base.Draw (gameTime);
 		}
 	}
 }
-

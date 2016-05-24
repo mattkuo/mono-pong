@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Pong
 {
@@ -8,13 +10,26 @@ namespace Pong
 		public const int Width = 10;
 		public const int MoveSpeed = 5;
 
-		public int X { get; set; }
-		public int Y { get; set; }
+		private Rectangle paddle;
+
+		public Rectangle Paddle { get { return this.paddle; } }
+
+		public int X 
+		{
+			get { return this.paddle.X; }
+			set { this.paddle.Location = new Point (value, this.Y); }
+		}
+
+		public int Y 
+		{
+			get { return this.paddle.Y; }
+			set { this.paddle.Location = new Point (this.X, value); }
+		}
 
 		public Player (int startX, int startY)
 		{
-			this.X = startX;
-			this.Y = startY;
+			this.paddle = new Rectangle (startX, startY, Player.Width, Player.Length);
 		}
+
 	}
 }
