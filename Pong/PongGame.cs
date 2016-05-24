@@ -25,6 +25,8 @@ namespace Pong
 		{
 			graphics = new GraphicsDeviceManager (this);
 			Content.RootDirectory = "Content";
+//			graphics.PreferredBackBufferHeight = 600;
+			graphics.PreferredBackBufferWidth = 500;
 		}
 
 		/// <summary>
@@ -77,18 +79,22 @@ namespace Pong
 				Exit ();
 			#endif
             
-			updatePlayerMovement (Keys.Up, Keys.Down, player);
-			updatePlayerMovement (Keys.W, Keys.S, player2);
+			updatePlayerMovement (Keys.W, Keys.S, player);
+			updatePlayerMovement (Keys.Up, Keys.Down, player2);
 
 			ball.X += (int) (ball.BallSpeed.X * gameTime.ElapsedGameTime.TotalSeconds);
 			ball.Y += (int) (ball.BallSpeed.Y * gameTime.ElapsedGameTime.TotalSeconds);
 
-			if (ball.X <= 0 || ball.X + Ball.Width >= GraphicsDevice.Viewport.Width)
-				ball.BallSpeed = new Vector2(ball.BallSpeed.X * -1, ball.BallSpeed.Y);
+			if (ball.X < 0 || ball.X + Ball.Width > GraphicsDevice.Viewport.Width)
+			{
+				// TODO: Give point to correct player
+			}
+
 			if (ball.Y <= 0 || ball.Y + Ball.Width >= GraphicsDevice.Viewport.Height)
 				ball.BallSpeed = new Vector2(ball.BallSpeed.X, ball.BallSpeed.Y * -1);
-				
 
+			if (ball.BallRect.Intersects (player.Paddle) || ball.BallRect.Intersects (player2.Paddle)) 
+				ball.BallSpeed = new Vector2 (ball.BallSpeed.X * -1, ball.BallSpeed.Y);
             
 			base.Update (gameTime);
 		}
