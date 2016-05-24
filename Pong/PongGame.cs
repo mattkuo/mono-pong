@@ -16,7 +16,7 @@ namespace Pong
 		SpriteBatch spriteBatch;
 
 		Texture2D whiteRectangle;
-		Player player;
+		Player player, player2;
 
 		public PongGame ()
 		{
@@ -34,6 +34,7 @@ namespace Pong
 		{
 			int playerCenter = GraphicsDevice.Viewport.Height / 2 - Player.Length / 2;
 			player = new Player (0, playerCenter);
+			player2 = new Player (GraphicsDevice.Viewport.Width - Player.Width, playerCenter);
             
 			base.Initialize ();
 		}
@@ -71,6 +72,11 @@ namespace Pong
 				player.Y += Player.MoveSpeed;
 			if (state.IsKeyDown (Keys.W) && player.Y > 0)
 				player.Y -= Player.MoveSpeed;
+
+			if (state.IsKeyDown (Keys.Down) && GraphicsDevice.Viewport.Height > player2.Y + Player.Length)
+				player2.Y += Player.MoveSpeed;
+			if (state.IsKeyDown (Keys.Up) && player2.Y > 0)
+				player2.Y -= Player.MoveSpeed;
 			
             
 			base.Update (gameTime);
@@ -87,6 +93,7 @@ namespace Pong
 			spriteBatch.Begin ();
 
 			spriteBatch.Draw (whiteRectangle, player.Paddle, Color.White);
+			spriteBatch.Draw (whiteRectangle, player2.Paddle, Color.White);
 
 			spriteBatch.End ();
             
