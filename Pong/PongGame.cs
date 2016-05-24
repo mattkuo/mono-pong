@@ -25,7 +25,6 @@ namespace Pong
 		{
 			graphics = new GraphicsDeviceManager (this);
 			Content.RootDirectory = "Content";
-//			graphics.PreferredBackBufferHeight = 600;
 			graphics.PreferredBackBufferWidth = 500;
 		}
 
@@ -93,8 +92,22 @@ namespace Pong
 			if (ball.Y <= 0 || ball.Y + Ball.Width >= GraphicsDevice.Viewport.Height)
 				ball.BallSpeed = new Vector2(ball.BallSpeed.X, ball.BallSpeed.Y * -1);
 
-			if (ball.BallRect.Intersects (player.Paddle) || ball.BallRect.Intersects (player2.Paddle)) 
-				ball.BallSpeed = new Vector2 (ball.BallSpeed.X * -1, ball.BallSpeed.Y);
+			bool isPaddleHit = false;
+			Rectangle paddleHit = player.Paddle;
+			if (ball.BallRect.Intersects (player.Paddle)) {
+				isPaddleHit = true;
+			} else if (ball.BallRect.Intersects (player2.Paddle)) {
+				isPaddleHit = true;
+				paddleHit = player2.Paddle;
+			}
+				
+			if (isPaddleHit) {
+				int paddleCenter = paddleHit.Center.Y;
+				int collisionCenter = ball.BallRect.Center.Y;
+
+				float multiplier = (float)(collisionCenter - paddleCenter) / (float)(Player.Length / 2);
+				ball.BallSpeed = new Vector2 (ball.BallSpeed.X * -1, Ball.Speed * multiplier);
+			}
             
 			base.Update (gameTime);
 		}

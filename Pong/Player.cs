@@ -25,9 +25,12 @@ namespace Pong
 			set { this.paddle.Location = new Point (this.X, value); }
 		}
 
+		public int Score { get; set; }
+
 		public Player (int startX, int startY)
 		{
 			this.paddle = new Rectangle (startX, startY, Player.Width, Player.Length);
+			this.Score = 0;
 		}
 
 	}

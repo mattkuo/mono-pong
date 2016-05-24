@@ -6,7 +6,7 @@ namespace Pong
 	public class Ball
 	{
 		public const int Width = 15;
-		public const int Speed = 200;
+		public const int Speed = 300;
 
 		private Rectangle ball;
 
@@ -27,7 +27,7 @@ namespace Pong
 		public Ball (int startX, int startY)
 		{
 			this.ball = new Rectangle (startX, startY, Ball.Width, Ball.Width);
-			this.BallSpeed = new Vector2 (Ball.Speed, Ball.Speed);
+			this.BallSpeed = new Vector2 (Ball.Speed, 0);
 		}
 	}
 }
