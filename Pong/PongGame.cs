@@ -79,6 +79,16 @@ namespace Pong
             
 			updatePlayerMovement (Keys.Up, Keys.Down, player);
 			updatePlayerMovement (Keys.W, Keys.S, player2);
+
+			ball.X += (int) (ball.BallSpeed.X * gameTime.ElapsedGameTime.TotalSeconds);
+			ball.Y += (int) (ball.BallSpeed.Y * gameTime.ElapsedGameTime.TotalSeconds);
+
+			if (ball.X <= 0 || ball.X + Ball.Width >= GraphicsDevice.Viewport.Width)
+				ball.BallSpeed = new Vector2(ball.BallSpeed.X * -1, ball.BallSpeed.Y);
+			if (ball.Y <= 0 || ball.Y + Ball.Width >= GraphicsDevice.Viewport.Height)
+				ball.BallSpeed = new Vector2(ball.BallSpeed.X, ball.BallSpeed.Y * -1);
+				
+
             
 			base.Update (gameTime);
 		}
