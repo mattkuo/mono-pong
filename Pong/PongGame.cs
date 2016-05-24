@@ -10,12 +10,15 @@ namespace Pong
 	/// <summary>
 	/// This is the main type for your game.
 	/// </summary>
-	public class Game1 : Game
+	public class PongGame : Game
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
 
-		public Game1 ()
+		Texture2D whiteRectangle;
+		Player player;
+
+		public PongGame ()
 		{
 			graphics = new GraphicsDeviceManager (this);
 			Content.RootDirectory = "Content";
@@ -29,7 +32,8 @@ namespace Pong
 		/// </summary>
 		protected override void Initialize ()
 		{
-			// TODO: Add your initialization logic here
+			int playerCenter = graphics.GraphicsDevice.Viewport.Height / 2 - Player.Length / 2;
+			player = new Player (0, playerCenter);
             
 			base.Initialize ();
 		}
@@ -43,7 +47,8 @@ namespace Pong
 			// Create a new SpriteBatch, which can be used to draw textures.
 			spriteBatch = new SpriteBatch (GraphicsDevice);
 
-			//TODO: use this.Content to load your game content here 
+			whiteRectangle = new Texture2D (GraphicsDevice, 1, 1);
+			whiteRectangle.SetData (new[] { Color.White });
 		}
 
 		/// <summary>
@@ -60,7 +65,18 @@ namespace Pong
 				Exit ();
 			#endif
             
-			// TODO: Add your update logic here
+			KeyboardState state = Keyboard.GetState ();
+
+			if (state.IsKeyDown(Keys.Escape))
+			{
+				Exit ();
+			}
+
+			if (state.IsKeyDown (Keys.Down))
+				player.Y += Player.MoveSpeed;
+			if (state.IsKeyDown (Keys.Up))
+				player.Y -= Player.MoveSpeed;
+			
             
 			base.Update (gameTime);
 		}
@@ -71,9 +87,11 @@ namespace Pong
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Draw (GameTime gameTime)
 		{
-			graphics.GraphicsDevice.Clear (Color.CornflowerBlue);
+			graphics.GraphicsDevice.Clear (Color.Black);
             
-			//TODO: Add your drawing code here
+			spriteBatch.Begin ();
+			spriteBatch.Draw (whiteRectangle, new Rectangle (player.X, player.Y, Player.Width, Player.Length), Color.White);
+			spriteBatch.End ();
             
 			base.Draw (gameTime);
 		}
