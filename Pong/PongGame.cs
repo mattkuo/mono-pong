@@ -16,7 +16,10 @@ namespace Pong
 		SpriteBatch spriteBatch;
 
 		Texture2D whiteRectangle;
+		Texture2D ballSprite;
+
 		Player player, player2;
+		Ball ball;
 
 		public PongGame ()
 		{
@@ -32,9 +35,15 @@ namespace Pong
 		/// </summary>
 		protected override void Initialize ()
 		{
+			IsMouseVisible = true;
+
 			int playerCenter = GraphicsDevice.Viewport.Height / 2 - Player.Length / 2;
 			player = new Player (0, playerCenter);
 			player2 = new Player (GraphicsDevice.Viewport.Width - Player.Width, playerCenter);
+
+			int centerY = GraphicsDevice.Viewport.Height / 2 - Ball.Width / 2;
+			int centerX = GraphicsDevice.Viewport.Width / 2 - Ball.Width / 2;
+			ball = new Ball (centerX, centerY);
             
 			base.Initialize ();
 		}
@@ -50,6 +59,8 @@ namespace Pong
 
 			whiteRectangle = new Texture2D (GraphicsDevice, 1, 1);
 			whiteRectangle.SetData (new[] { Color.White });
+
+			ballSprite = Content.Load<Texture2D> ("ball");
 		}
 
 		/// <summary>
@@ -66,20 +77,20 @@ namespace Pong
 				Exit ();
 			#endif
             
-			KeyboardState state = Keyboard.GetState ();
-
-			if (state.IsKeyDown (Keys.S) && GraphicsDevice.Viewport.Height > player.Y + Player.Length)
-				player.Y += Player.MoveSpeed;
-			if (state.IsKeyDown (Keys.W) && player.Y > 0)
-				player.Y -= Player.MoveSpeed;
-
-			if (state.IsKeyDown (Keys.Down) && GraphicsDevice.Viewport.Height > player2.Y + Player.Length)
-				player2.Y += Player.MoveSpeed;
-			if (state.IsKeyDown (Keys.Up) && player2.Y > 0)
-				player2.Y -= Player.MoveSpeed;
-			
+			updatePlayerMovement (Keys.Up, Keys.Down, player);
+			updatePlayerMovement (Keys.W, Keys.S, player2);
             
 			base.Update (gameTime);
+		}
+
+		private void updatePlayerMovement (Keys up, Keys down, Player p)
+		{
+			KeyboardState state = Keyboard.GetState ();
+			if (state.IsKeyDown (up) && p.Y > 0)
+				p.Y -= Player.MoveSpeed;
+			if (state.IsKeyDown (down) && GraphicsDevice.Viewport.Height > p.Y + Player.Length)
+				p.Y += Player.MoveSpeed;
+			
 		}
 
 		/// <summary>
@@ -94,6 +105,7 @@ namespace Pong
 
 			spriteBatch.Draw (whiteRectangle, player.Paddle, Color.White);
 			spriteBatch.Draw (whiteRectangle, player2.Paddle, Color.White);
+			spriteBatch.Draw(ballSprite, ball.BallRect, Color.White);
 
 			spriteBatch.End ();
             
