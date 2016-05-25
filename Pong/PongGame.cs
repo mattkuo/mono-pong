@@ -21,6 +21,8 @@ namespace Pong
 		Player player, player2;
 		Ball ball;
 
+		SpriteFont scoreFont;
+
 		public PongGame ()
 		{
 			graphics = new GraphicsDeviceManager (this);
@@ -42,9 +44,7 @@ namespace Pong
 			player = new Player (0, playerCenter);
 			player2 = new Player (GraphicsDevice.Viewport.Width - Player.Width, playerCenter);
 
-			int centerY = GraphicsDevice.Viewport.Height / 2 - Ball.Width / 2;
-			int centerX = GraphicsDevice.Viewport.Width / 2 - Ball.Width / 2;
-			ball = new Ball (centerX, centerY);
+			this.resetBall ();
             
 			base.Initialize ();
 		}
@@ -62,6 +62,8 @@ namespace Pong
 			whiteRectangle.SetData (new[] { Color.White });
 
 			ballSprite = Content.Load<Texture2D> ("ball");
+
+			scoreFont = Content.Load<SpriteFont> ("digital");
 		}
 
 		/// <summary>
@@ -84,9 +86,14 @@ namespace Pong
 			ball.X += (int) (ball.BallSpeed.X * gameTime.ElapsedGameTime.TotalSeconds);
 			ball.Y += (int) (ball.BallSpeed.Y * gameTime.ElapsedGameTime.TotalSeconds);
 
-			if (ball.X < 0 || ball.X + Ball.Width > GraphicsDevice.Viewport.Width)
-			{
-				// TODO: Give point to correct player
+			if (ball.X < 0) {
+				player2.Score += 1;
+				this.resetBall ();
+				this.resetPaddles ();
+			} else if (ball.X + Ball.Width > GraphicsDevice.Viewport.Width) {
+				player.Score += 1;
+				this.resetPaddles ();
+				this.resetBall ();
 			}
 
 			if (ball.Y <= 0 || ball.Y + Ball.Width >= GraphicsDevice.Viewport.Height)
@@ -112,16 +119,6 @@ namespace Pong
 			base.Update (gameTime);
 		}
 
-		private void updatePlayerMovement (Keys up, Keys down, Player p)
-		{
-			KeyboardState state = Keyboard.GetState ();
-			if (state.IsKeyDown (up) && p.Y > 0)
-				p.Y -= Player.MoveSpeed;
-			if (state.IsKeyDown (down) && GraphicsDevice.Viewport.Height > p.Y + Player.Length)
-				p.Y += Player.MoveSpeed;
-			
-		}
-
 		/// <summary>
 		/// This is called when the game should draw itself.
 		/// </summary>
@@ -136,9 +133,46 @@ namespace Pong
 			spriteBatch.Draw (whiteRectangle, player2.Paddle, Color.White);
 			spriteBatch.Draw(ballSprite, ball.BallRect, Color.White);
 
+			int playerScoreX = GraphicsDevice.Viewport.Width / 4;
+			int playerScoreX2 = GraphicsDevice.Viewport.Width - playerScoreX;
+
+			this.drawScore (playerScoreX, 20, player);
+			this.drawScore (playerScoreX2, 20, player2);
+
 			spriteBatch.End ();
             
 			base.Draw (gameTime);
+		}
+
+		private void drawScore(int x, int y, Player p) 
+		{
+			String playerScore = p.Score.ToString ();
+			int scoreWidth = (int) (scoreFont.MeasureString (playerScore).X / 2);
+			spriteBatch.DrawString (scoreFont, playerScore, new Vector2 (x - scoreWidth, y), Color.White);
+		}
+
+		private void resetPaddles()
+		{
+			int playerCenter = GraphicsDevice.Viewport.Height / 2 - Player.Length / 2;
+			player.Y = playerCenter;
+			player2.Y = playerCenter;
+		}
+
+		private void resetBall ()
+		{
+			int centerY = GraphicsDevice.Viewport.Height / 2 - Ball.Width / 2;
+			int centerX = GraphicsDevice.Viewport.Width / 2 - Ball.Width / 2;
+			ball = new Ball (centerX, centerY);
+		}
+
+		private void updatePlayerMovement (Keys up, Keys down, Player p)
+		{
+			KeyboardState state = Keyboard.GetState ();
+			if (state.IsKeyDown (up) && p.Y > 0)
+				p.Y -= Player.MoveSpeed;
+			if (state.IsKeyDown (down) && GraphicsDevice.Viewport.Height > p.Y + Player.Length)
+				p.Y += Player.MoveSpeed;
+
 		}
 	}
 }
