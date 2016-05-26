@@ -53,6 +53,8 @@
     <Compile Include="PongGame.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Ball.cs" />
+    <Compile Include="GameMenu.cs" />
+    <Compile Include="GameMenuButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Icon.png" />

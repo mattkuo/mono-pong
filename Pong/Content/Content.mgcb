@@ -31,3 +31,9 @@
 /processorParam:TextureFormat=Compressed
 /build:digital.spritefont
 
+#begin menufont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:TextureFormat=Compressed
+/build:menufont.spritefont
+
